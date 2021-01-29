@@ -95,6 +95,9 @@ class InsatongGUI:
         self.page_num = self.page_num - 1
         if self.page_num <= 1:
             self.page_num = 1
+        
+        self.page_txt.delete(0, END)
+        self.page_txt.insert(END, str(self.page_num))
 
         request_url = WEB_URL.format(self.page_num, self.data_cnt)
         self.webdriver.get(request_url)
@@ -105,6 +108,9 @@ class InsatongGUI:
         '''
         self.page_num = self.page_num + 1
 
+        self.page_txt.delete(0, END)
+        self.page_txt.insert(END, str(self.page_num))
+        
         request_url = WEB_URL.format(self.page_num, self.data_cnt)
         self.webdriver.get(request_url)
 
