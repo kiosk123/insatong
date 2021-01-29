@@ -32,7 +32,8 @@ pip install pywin32
 python main.py 
 ```
 
-GUI는 다음과 같이 간단하게 구성되어있다.
+GUI는 다음과 같이 간단하게 구성되어있다.  
+  
 ![gui.png](./image/gui.png)
 
 - 페이지 : 탐색할 페이지 번호를 입력한다
