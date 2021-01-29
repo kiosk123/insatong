@@ -3,15 +3,19 @@ import tkinter.messagebox as msgbox
 
 from win32api import GetSystemMetrics
 
+WEB_URL = "https://www.saramin.co.kr/zf_user/jobs/recent-contents/recruiter-interviews?page={}&max_entry={}"
 class InsatongGUI:
-    WEB_URL = "https://www.saramin.co.kr/zf_user/jobs/recent-contents/recruiter-interviews?page=1&max_entry=200"
+    
+    
     def __init__(self, webdriver):
         # data variable 
         self.page_num = 1
         self.data_cnt = 50
-        # self.webdriver = webdriver
-        # print(webdriver)
-        # self.webdriver.get("https://www.saramin.co.kr/zf_user/jobs/recent-contents/recruiter-interviews")
+        self.webdriver = webdriver
+
+        # initial request for url
+        request_url = WEB_URL.format(self.page_num, self.data_cnt)
+        self.webdriver.get(request_url)
 
         root = Tk()
         posX, posY = int(GetSystemMetrics(0) / 3), int(GetSystemMetrics(1) / 3)
@@ -58,6 +62,10 @@ class InsatongGUI:
             self.page_num = page_num
             self.data_cnt_txt.delete(0, END)
             self.data_cnt_txt.insert(END, str(self.data_cnt))
+
+            request_url = WEB_URL.format(self.page_num, self.data_cnt)
+            self.webdriver.get(request_url)
+            
         except ValueError:
             msgbox.showerror("오류", "숫자가 아닌 값이 입력되었습니다.")
             self.page_txt.delete(0, END)
@@ -72,6 +80,9 @@ class InsatongGUI:
             self.data_cnt = data_cnt
             self.page_txt.delete(0, END)
             self.page_txt.insert(END, str(self.page_num))
+
+            request_url = WEB_URL.format(self.page_num, self.data_cnt)
+            self.webdriver.get(request_url)
         except ValueError:
             msgbox.showerror("오류", "숫자가 아닌 값이 입력되었습니다.")
             self.data_cnt_txt.delete(0, END)
@@ -85,11 +96,17 @@ class InsatongGUI:
         if self.page_num <= 1:
             self.page_num = 1
 
+        request_url = WEB_URL.format(self.page_num, self.data_cnt)
+        self.webdriver.get(request_url)
+
     def next_btn_event(self, *args):
         '''
         다음 페이지 버튼 이벤트 처리
         '''
         self.page_num = self.page_num + 1
+
+        request_url = WEB_URL.format(self.page_num, self.data_cnt)
+        self.webdriver.get(request_url)
 
 
 if __name__ == "__main__":
