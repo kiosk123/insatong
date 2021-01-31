@@ -7,7 +7,7 @@ import selenium
 import tkinter.messagebox as msgbox
 import selenium.webdriver as webdriver
 
-
+# TODO 검색기능과 하이라이팅 추가
 if __name__ == '__main__':
     try:
         size_opt = "--window-size={},{}".format(GetSystemMetrics(0), GetSystemMetrics(1))
