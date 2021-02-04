@@ -30,12 +30,8 @@ pip install pywin32
 pip install tkcalendar
 ```
 
-실행은 main.py를 실행하면 됨
-
-```bash
-python main.py 
-```
-
+실행은 main.bat을 더블클릭 해서 실행한다.  
+  
 GUI는 다음과 같이 간단하게 구성되어있다.  
   
 ![gui.png](./image/gui.jpg)
