@@ -10,6 +10,7 @@ import selenium.webdriver as webdriver
 # TODO 검색기능과 하이라이팅 추가
 if __name__ == '__main__':
     try:
+        import gui
         size_opt = "--window-size={},{}".format(GetSystemMetrics(0), GetSystemMetrics(1))
         opts = Options()
         opts.add_argument(size_opt)
