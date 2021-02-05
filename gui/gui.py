@@ -8,10 +8,10 @@ import tkinter.messagebox as msgbox
 
 _WEB_URL = "https://www.saramin.co.kr/zf_user/jobs/recent-contents/recruiter-interviews?page={}"
 _DATE_XPATH = '//*[@id="jobboard_basic"]/tbody//tr/td[1]'
-_COMPANY_XPATH = '//*[@id="jobboard_basic"]/tbody//tr/td[4]/a[contains(text(),"{}")]'
+_COMPANY_XPATH = '//*[@id="jobboard_basic"]/tbody//tr/td[4]/a[contains(translate(text(),"ABCDEFGHIJKLMNOPQRSTUVWXYZ","abcdefghijklmnopqrstuvwxyz"),"{}")]'
 
 def _highlight_compay_text(wdriver, company):
-    xpath = _COMPANY_XPATH.format(company)
+    xpath = _COMPANY_XPATH.format(company.lower())
     elements = wdriver.find_elements_by_xpath(xpath)
     for element in elements:
         parent = element._parent
@@ -28,7 +28,7 @@ def _worker_thread1(wdriver, page_num, search_txt):
         dates = list(filter(lambda x: x != 'TODAY', dates))
 
         # 검색할 회사 찾았으면 하이라이트 하고 멈춤
-        companys = wdriver.find_elements_by_xpath(_COMPANY_XPATH.format(search_txt))
+        companys = wdriver.find_elements_by_xpath(_COMPANY_XPATH.format(search_txt.lower()))
         if len(companys) > 0:
             _highlight_compay_text(wdriver, search_txt)
             msgbox.showinfo("성공", "{}의 인사통을 찾았습니다.".format(search_txt))
@@ -50,7 +50,7 @@ def _worker_thread2(wdriver, page_num, search_date, search_txt):
         dates = list(filter(lambda x: x < search_date, dates))
 
         # 검색할 회사 찾았으면 하이라이트 하고 멈춤
-        companys = wdriver.find_elements_by_xpath(_COMPANY_XPATH.format(search_txt))
+        companys = wdriver.find_elements_by_xpath(_COMPANY_XPATH.format(search_txt.lower()))
         if len(companys) > 0:
             _highlight_compay_text(wdriver, search_txt)
             msgbox.showinfo("성공", "{}의 인사통을 찾았습니다.".format(search_txt))
