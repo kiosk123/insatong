@@ -119,6 +119,15 @@ class InsatongGUI:
             msgbox.showwarning("확인", "회사명을 입력해주세요")
             return
 
+        input_page = self.__page_txt.get().strip()
+        try:
+            self.__page_num = int(input_page)
+        except ValueError:
+            msgbox.showerror("오류", "숫자가 아닌 값이 입력되었습니다")
+            self.__page_txt.delete(0, END)
+            self.__page_txt.insert(0, str(self.__page_num))
+            return
+            
         if search_date == sys_date:
             job = Thread(target=_worker_thread1, args=(self.__webdriver, self.__page_num, search_txt))
             job.start()
