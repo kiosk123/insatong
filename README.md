@@ -34,7 +34,7 @@ pip install tkcalendar
   
 GUI는 다음과 같이 간단하게 구성되어있다.  
   
-![show.png](./image/gui.jpg)
+![show.png](./image/show.png)
 
 - 검색시작일 : 인사통 검색 시작 날짜를 입력한다.
 - 회사명 : 검색할 회사명을 입력한다.
