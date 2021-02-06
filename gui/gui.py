@@ -18,9 +18,9 @@ def _highlight_compay_text(wdriver, company):
         style = "background: yellow; color: blue; font-weight: bold;"
         parent.execute_script("arguments[0].setAttribute('style', arguments[1]);", element, style)
 
-def _worker_thread1(wdriver, page_num, search_txt):
+def _worker_thread1(target, wdriver, page_num, search_txt):
     page = page_num
-    while True:
+    while target.do_action:
         wdriver.get(_WEB_URL.format(page))
         dates = wdriver.find_elements_by_xpath(_DATE_XPATH)
         
@@ -40,10 +40,10 @@ def _worker_thread1(wdriver, page_num, search_txt):
             break
         page = page + 1
 
-def _worker_thread2(wdriver, page_num, search_date, search_txt):
+def _worker_thread2(target, wdriver, page_num, search_date, search_txt):
     page = page_num
     search_date = int(search_date.replace("-",""))
-    while True:
+    while target.do_action:
         wdriver.get(_WEB_URL.format(page))
         dates = wdriver.find_elements_by_xpath(_DATE_XPATH)
         dates = [int(d.text.split('\n')[0].replace("-","")) for d in dates if d.text != 'TODAY']
@@ -68,6 +68,7 @@ class InsatongGUI:
         # data variable 
         self.__page_num = 1
         self.__webdriver = webdriver
+        self.__do_action = False
 
         # initial request for url
         request_url = _WEB_URL.format(self.__page_num)
@@ -104,16 +105,29 @@ class InsatongGUI:
         button_frame.place(x=50, y=270)
 
         # define buttons
-        active_btn = Button(button_frame,text="실행", width=22, height=3, padx=3 ,command=self.__active_btn_event)
+        active_btn = Button(button_frame,text="실행", width=9, height=3, padx=5 ,command=self.__active_btn_event)
         active_btn.bind("<Return>", self.__active_btn_event)
-        active_btn.pack()
+        active_btn.grid(row=0, column=0)
+
+        stop_btn = Button(button_frame,text="중지", width=9, height=3, padx=5 ,command=self.__action_stop_event)
+        stop_btn.bind("<Return>", self.__action_stop_event)
+        stop_btn.grid(row=0, column=1, padx=5)
 
         root.mainloop();
+
+    @property
+    def do_action(self):
+        return self.__do_action
+
+    @do_action.setter
+    def do_action(self, isdo):
+        self.__do_action = isdo
     
     def __active_btn_event(self, *args):
         sys_date = str(date.today())
         search_date = str(self.__cal.get_date())
         search_txt = self.__search_txt.get().strip()
+        self.do_action = True
 
         if len(search_txt) == 0:
             msgbox.showwarning("확인", "회사명을 입력해주세요")
@@ -129,10 +143,10 @@ class InsatongGUI:
             return
             
         if search_date == sys_date:
-            job = Thread(target=_worker_thread1, args=(self.__webdriver, self.__page_num, search_txt))
+            job = Thread(target=_worker_thread1, args=(self, self.__webdriver, self.__page_num, search_txt))
             job.start()
         else:
-            job = Thread(target=_worker_thread2,  args=(self.__webdriver, self.__page_num, search_date, search_txt))
+            job = Thread(target=_worker_thread2,  args=(self, self.__webdriver, self.__page_num, search_date, search_txt))
             job.start()
     
     def __page_move_event(self, *args):
@@ -147,3 +161,7 @@ class InsatongGUI:
         
         request_url = _WEB_URL.format(self.__page_num)
         self.__webdriver.get(request_url)
+
+    def __action_stop_event(self, *args):
+        self.do_action = False
+        msgbox.showwarning("확인", "탐색이 중지 되었습니다.")
